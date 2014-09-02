@@ -13,14 +13,14 @@ var DIST     = "dist";
 
 
 // Help
-gulp.task("help", function(next) {
+gulp.task("help", function(cb) {
   gutil.log("--- " + pkgJson.name + " ---");
   gutil.log("");
   gutil.log("See all of the available tasks:");
   gutil.log("$ gulp -T");
   gutil.log("");
   // TODO
-  next();
+  cb();
 });
 
 
@@ -110,27 +110,32 @@ gulp.task("~check", ["check"], function() {
 
 // Clean the DIST dir
 gulp.task("clean", function() {
-  return gulp.src([DIST, ".build"], { read: false })
+  return gulp.src([DIST, ".build", "bower_components"], { read: false })
     .pipe(require('gulp-rimraf')());
 });
 
 
 // Updates the Bower dependencies based on the bower.json file
-gulp.task("update-deps", function(next) {
+gulp.task("update-deps", function(cb) {
 
   var needsUpdate = false;
 
-  return gulp.src("bower.json")
+  gulp.src("bower.json")
     .pipe(require("gulp-newer")(".build"))
     .pipe(gulp.dest(".build")) // todo: don"t do this if the bower install fails
+    .on("end", function() {
+      if (!needsUpdate) {
+        cb();
+      }
+    })
     .on("close", function() {
       if (!needsUpdate) {
-        next();
+        cb();
       }
     })
     .on("error", function(error) {
       if (!needsUpdate) {
-        next(error);
+        cb(error);
       }
     })
     .on("data", function() {
@@ -140,7 +145,7 @@ gulp.task("update-deps", function(next) {
       bower.commands.install([], {}, { interactive: false })
         .on("end", function () {
           gutil.log("Bower Dependencies Updated");
-          //next();
+          cb();
         })
         .on("log", function (log) {
           if (log.level == "action" && log.id == "install") {
@@ -149,7 +154,7 @@ gulp.task("update-deps", function(next) {
         })
         .on("error", function (error) {
           gutil.log("Bower Error: ", error);
-          next(error);
+          cb(error);
         });
     });
 
