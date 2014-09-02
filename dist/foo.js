@@ -1,2 +1,2 @@
-define("other",[],function(){var e={};return e.hello=function(e){return"hello, "+e},e}),"undefined"!=typeof module&&(module.exports="other"),define("main",["jquery","other"],function(e,n){var r={};return r.bar=function(r){var o=n.hello("world");e(r).text(o)},r});
+!function(){"use strict";define("other",[],function(){var e={};return e.hello=function(e){return"hello, "+e},e}),"undefined"!=typeof module&&(module.exports="other")}(),function(){"use strict";define("main",["jquery","other"],function(e,o){var n={};return n.bar=function(n){var t=o.hello("world");e(n).text(t)},n}),"undefined"!=typeof module&&(module.exports="foo")}();
 //# sourceMappingURL=foo.js.map
