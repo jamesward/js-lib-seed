@@ -1,6 +1,7 @@
 var gulp = require("gulp"),
   path = require("path"),
   gutil = require("gulp-util"),
+  bower = require("bower"),
   pkgJson = require("./package.json"),
   bowerJson = require("./bower.json");
 
@@ -136,7 +137,7 @@ gulp.task("update-deps", function(next) {
       // updated bower.json
       needsUpdate = true;
       gutil.log("Updating Bower Dependencies");
-      require("bower").commands.install([], {}, { interactive: false })
+      bower.commands.install([], {}, { interactive: false })
         .on("end", function () {
           gutil.log("Bower Dependencies Updated");
           //next();
@@ -155,6 +156,28 @@ gulp.task("update-deps", function(next) {
 });
 
 
+// register this project with bower
+gulp.task("bower:register", function() {
+
+  if ((bowerJson.name != undefined) && (bowerJson.repository != undefined) && (bowerJson.repository.url != undefined)) {
+    bower.commands.register(bowerJson.name, bowerJson.repository.url)
+      .on("end", function () {
+        gutil.log("Registration completed");
+      })
+      .on("log", function (log) {
+        if (log.id == "register") {
+          gutil.log("Registering: " + log.message);
+        }
+      })
+      .on("error", function (error) {
+        gutil.log("Bower Error: ", error);
+      });
+  }
+  else {
+    gutil.log("You must specify a name and a repository.url in the bower.json file!")
+  }
+
+});
 
 var continuous = function(task) {
   gulp.watch([SRC_JS, TEST_JS], [task]);
