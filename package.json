@@ -5,6 +5,9 @@
   "repository": "https://github.com/jamesward/js-lib-seed",
   "homepage": "http://www.jamesward.com",
   "author": "James Ward",
+  "scripts": {
+    "test": "gulp test"
+  },
   "devDependencies": {
     "bower": "^1.3.9",
     "gulp": "^3.8.7",
