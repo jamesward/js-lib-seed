@@ -110,8 +110,8 @@ gulp.task("~check", ["check"], function() {
 
 // Clean the DIST dir
 gulp.task("clean", function() {
-  return gulp.src([DIST, ".build"], {read: false})
-    .pipe(require("gulp-clean")());
+  return gulp.src([DIST, ".build"], { read: false })
+    .pipe(require('gulp-rimraf')());
 });
 
 
