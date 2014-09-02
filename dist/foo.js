@@ -1,2 +1,2 @@
-define("other",[],function(){var e={};return e.hello=function(e){return"hello, "+e},e}),define("main",["jquery","other"],function(e,n){var r={};return r.bar=function(r){var t=n.hello("world");e(r).text(t)},r});
+define("other",[],function(){var e={};return e.hello=function(e){return"hello, "+e},e}),"undefined"!=typeof module&&(module.exports="other"),define("main",["jquery","other"],function(e,n){var r={};return r.bar=function(r){var o=n.hello("world");e(r).text(o)},r});
 //# sourceMappingURL=foo.js.map

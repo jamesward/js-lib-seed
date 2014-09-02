@@ -11,16 +11,31 @@ var TEST_JS  = path.join(TEST, "**", "*.js");
 var DIST     = "dist";
 
 
-/*
-function compileJavaScript() {
-  var jshint = require("gulp-jshint");
-  return gulp.src(SRC)
-    .pipe(jshint())
-    .pipe(jshint.reporter(require("jshint-stylish")))
-    .pipe(gulp.dest(DIST));
-}
-*/
+// Help
+gulp.task("help", function(next) {
+  gutil.log("--- " + pkgJson.name + " ---");
+  gutil.log("");
+  gutil.log("See all of the available tasks:");
+  gutil.log("$ gulp -T");
+  gutil.log("");
+  // TODO
+  next();
+});
 
+
+// Default
+gulp.task("default", ["help"]);
+
+
+// Create a dist
+gulp.task("dist", ["rjs"], function() {
+
+  return null;
+
+});
+
+
+// Run rjs on the source
 gulp.task("rjs", ["update-deps"], function() {
 
   var sourcemaps = require("gulp-sourcemaps");
@@ -57,93 +72,46 @@ gulp.task("rjs", ["update-deps"], function() {
     .pipe(sourcemaps.init())
     .pipe(require("gulp-concat")(bowerJson.main))
     .pipe(require("gulp-uglify")())
-    .pipe(sourcemaps.write(".", {sourceRoot: "/src"}))
+    .pipe(sourcemaps.write(".", {sourceRoot: SRC}))
     .pipe(gulp.dest(DIST));
 
 });
 
-gulp.task("test", ["update-deps"], function() {
 
-  return gulp.src('test/index.html')
-    .pipe(require('gulp-mocha-phantomjs')());
-
+// Run the tests
+gulp.task("test", ["check"], function() {
+  return gulp.src("test/index.html")
+    .pipe(require("gulp-mocha-phantomjs")());
 });
 
-/*
-// Run JSHint on all of the app/js files and concatenate everything together
-function compileJavaScript() {
+
+// Continuous Test - Rerun tests when srcs or tests change
+gulp.task("~test", ["test"], function() {
+  continuous("test");
+});
+
+
+// Lint the src and tests
+gulp.task("check", ["update-deps"], function() {
   var jshint = require("gulp-jshint");
-  return gulp.src(SRC)
+
+  return gulp.src([SRC_JS, TEST_JS])
     .pipe(jshint())
     .pipe(jshint.reporter(require("jshint-stylish")))
-    .pipe(gulp.dest(DIST));
-}
-
-gulp.task("compile:javascript", ["update"], function() {
-  return compileJavaScript();
 });
 
-// Uglify the JS
-gulp.task("dist:javascript", ["update"], function() {
-  return compileJavaScript()
-    .pipe(rename({ suffix: ".min" }))
-    .pipe(require("gulp-ngmin")()) // ngmin makes angular injection syntax compatible with uglify
-    .pipe(require("gulp-uglify")())
-    .pipe(gulp.dest(DIST_JAVASCRIPT));
+
+// Continuous Test - Rerun tests when srcs or tests change
+gulp.task("~check", ["check"], function() {
+  continuous("check");
 });
 
-// Copy Bower assets
-gulp.task("copy-bower", ["update"], function() {
-  return gulp.src("bower_components/**")
-    .pipe(gulp.dest(DIST_LIB));
-});
-
-// Compile everything
-gulp.task("compile", ["compile:javascript"]);
-
-
-// Dist everything
-gulp.task("dist", ["copy-bower", "dist:html", "dist:less", "dist:javascript", "dist:images"]);
-
-*/
 
 // Clean the DIST dir
 gulp.task("clean", function() {
   return gulp.src([DIST, ".build"], {read: false})
     .pipe(require("gulp-clean")());
 });
-
-
-/*
-
-// Server that serves static content from DIST
-gulp.task("server", ["compile"], function(next) {
-  var port = process.env.PORT || 5000;
-  var connect = require("connect");
-  var server = connect();
-  server.use(connect.static(DIST)).listen(port, next);
-  gutil.log("Server up and running: http://localhost:" + port);
-});
-
-
-// Auto-Reloading Development Server
-gulp.task("dev", ["server"], function() {
-
-  gulp.watch(SRC_ALL, ["compile"]);
-  gulp.watch("bower.json", ["copy-bower"]);
-
-  var lrserver = require("gulp-livereload")();
-
-  gulp.watch(DIST_ALL).on("change", function(file) {
-    lrserver.changed(file.path);
-  });
-
-});
-
-
-// Prod Server
-gulp.task("prod", ["server", "dist"]);
-*/
 
 
 // Updates the Bower dependencies based on the bower.json file
@@ -187,21 +155,8 @@ gulp.task("update-deps", function(next) {
 });
 
 
-// Help
-gulp.task("help", function(next) {
-  gutil.log("--- " + pkgJson.name + " ---");
-  gutil.log("");
-  gutil.log("See all of the available tasks:");
-  gutil.log("$ gulp -T");
-  gutil.log("");
-  gutil.log("Run a dev mode server:");
-  gutil.log("$ gulp dev");
-  gutil.log("");
-  gutil.log("Run a prod mode server:");
-  gutil.log("$ gulp prod");
-  next();
-});
 
-
-// Default
-gulp.task("default", ["help"]);
+var continuous = function(task) {
+  gulp.watch([SRC_JS, TEST_JS], [task]);
+  gulp.watch("bower.json", ["update-deps"]);
+};
