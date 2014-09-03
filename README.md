@@ -1,5 +1,8 @@
 
 
+
+[![Build Status](https://travis-ci.org/jamesward/js-lib-seed.svg?branch=master)](https://travis-ci.org/jamesward/js-lib-seed)
+
 Local Build
 
 

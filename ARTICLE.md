@@ -1,22 +1,22 @@
 So You Want To Create a JavaScript Library?
 -------------------------------------------
 
-1. Managed Dependencies
+* Managed Dependencies
 
-2. Version & Tag Releases
+* Lint
 
-3. Tests
+* Tests
 
-4. CI
+* CI
 
-5. JS Docs
+* Support Modularity
 
-6. Support Modularity
+* JS Docs
 
-7. Public CDN
+* Version & Tag Releases
 
-8. License
+* Publish on Bower
 
-9. Publish on Bower
+* Public CDN
 
-10. Lint
+* License
