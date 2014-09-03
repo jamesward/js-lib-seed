@@ -1,14 +1,13 @@
 {
   "name": "js-lib-seed",
+  "description": "JavaScript Library Seed",
   "version": "0.0.0",
   "main": "foo.js",
-  "ignore": [
-    "site",
-    "examples",
-    "*.md",
-    "gulpfile.js",
-    "package.json"
+  "license": "MIT",
+  "authors": [
+    { "name": "James Ward", "email": "james@jamesward.com", "homepage": "http://jamesward.com" }
   ],
+  "homepage": "https://github.com/jamesward/js-lib-seed",
   "repository": {
     "type": "git",
     "url": "https://github.com/jamesward/js-lib-seed.git"
@@ -18,5 +17,12 @@
   },
   "devDependencies": {
 
-  }
+  },
+  "ignore": [
+    "site",
+    "examples",
+    "*.md",
+    "gulpfile.js",
+    "package.json"
+  ]
 }

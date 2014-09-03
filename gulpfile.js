@@ -2,19 +2,22 @@ var gulp = require("gulp"),
   path = require("path"),
   gutil = require("gulp-util"),
   bower = require("bower"),
-  pkgJson = require("./package.json"),
   bowerJson = require("./bower.json");
 
-var SRC      = "src";
-var SRC_JS   = path.join(SRC, "**", "*.js");
-var TEST     = "test";
-var TEST_JS  = path.join(TEST, "**", "*.js");
-var DIST     = "dist";
+// standard paths
+var SRC = "src";
+var SRC_JS = path.join(SRC, "**", "*.js");
+var TEST = "test";
+var TEST_JS = path.join(TEST, "**", "*.js");
+var DIST = "dist";
+var SITE = "site";
+var SITE_DOCS = path.join(SITE, "docs", bowerJson.version);
+
 
 
 // Help
 gulp.task("help", function(cb) {
-  gutil.log("--- " + pkgJson.name + " ---");
+  gutil.log("--- " + bowerJson.name + " ---");
   gutil.log("");
   gutil.log("See all of the available tasks:");
   gutil.log("$ gulp -T");
@@ -31,7 +34,7 @@ gulp.task("default", ["help"]);
 // Create a dist
 gulp.task("dist", ["rjs"], function() {
 
-  return null;
+
 
 });
 
@@ -158,6 +161,29 @@ gulp.task("update-deps", function(cb) {
         });
     });
 
+});
+
+
+// generate the js docs
+gulp.task("docs", function() {
+  var config = {
+    project: {
+      "name": bowerJson.name,
+      "description": bowerJson.description,
+      "version": bowerJson.version,
+      "url": bowerJson.homepage
+    }
+  };
+
+  return gulp.src(SRC_JS)
+    .pipe(require("gulp-yuidoc")(config))
+    .pipe(gulp.dest(SITE_DOCS));
+});
+
+
+// continuously generate the js docs
+gulp.task("~docs", ["docs"], function() {
+  continuous("docs");
 });
 
 
