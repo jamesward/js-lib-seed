@@ -166,7 +166,7 @@ gulp.task("update-deps", function(cb) {
 
 // generate the js docs
 gulp.task("docs", function() {
-  var config = {
+  var parserOptions = {
     project: {
       "name": bowerJson.name,
       "description": bowerJson.description,
@@ -175,8 +175,13 @@ gulp.task("docs", function() {
     }
   };
 
+  var generatorOptions = {
+    "helpers": ["node_modules/yuidoc-bootstrap-theme/helpers/helpers.js"],
+    "themedir": "node_modules/yuidoc-bootstrap-theme"
+  };
+
   return gulp.src(SRC_JS)
-    .pipe(require("gulp-yuidoc")(config))
+    .pipe(require("gulp-yuidoc")(parserOptions, generatorOptions))
     .pipe(gulp.dest(SITE_DOCS));
 });
 

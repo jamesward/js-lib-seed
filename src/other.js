@@ -3,17 +3,14 @@
  */
 
 /**
+ * This is an other module.
+ *
  * @module other
+ * @class other
  */
 (function () {
   "use strict";
-  /*
-   This part of the source does not have dependencies on jQuery or the DOM
-   */
 
-  /**
-   * @class other
-   */
   define(function () {
 
     var other = { };
